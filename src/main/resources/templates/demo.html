@@ -1,0 +1,287 @@
+	
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <title>PCI Test Map v1</title>
+
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,places"></script>
+    <script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/script.js"></script>
+
+  </head>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="mynav"></div>
+    </div>
+  </nav>
+
+  <body style="padding-top:80px; padding-left:15px; padding-right:15px;">
+
+   <div class="col-xs-12">
+      <div class="panel panel-default" >
+        <div class="panel-body">
+          <h2 style="padding-left:15px;padding-right:15px;text-align: center;">PCI Prediction Calculator</h2>
+          <h3 style="padding-left:15px;padding-right:15px;text-align: center;">Predicting PCI Using Machine Learning Technology</h3>
+          <hr />
+          <div style="padding: 10px 15px 10px 15px;font-size:1.2em; text-align: justify;">
+            <p>Pavement condition index (PCI) is used to assess the condition and remaining life of roads.
+               It is calculated based on a set of procedures set out by ASTM or MTO.
+               These approaches rely on the use of data about physical pavement distresses. Collecting such data can be expensive,
+               especially to smaller municipalities. This portal demonstrates how machine learning models can help municipalities
+               in predicting the PCI of roads using easy-to-collect and cost-effective data (freely available data).
+               The methodology and the App was partially funded by OGRA and conducted by a team of researchers at the university of Toronto in 2016-2017.</p>
+            <hr/>
+            <p>This App predicts deterioration in PCI values after three years (future amendments will add different time spans).
+               Because not all data can be available to all municipalities, the App uses three algorithms.
+               The first uses 8 basic attributes. The second uses 4 attributes (including precipitation data).
+               The third uses 4 attributes (including maintenance and rehabilitation history data).</p>
+            <p>This web app was developed using machine learning technologies to estimates deterioration of PCI of asphalt roads within three years.
+               Three algorithms were developed based on analysing data from a 1000 examples of road sections in the US and Canada (extracted from the LTPP database).</p>
+            <p>This App was developed through a joint research project between Marmak Information Technologies and the University of Toronto,
+               with collaboration from Ontario Good Roads Association.</p>
+
+               <br>
+                <p style="text-align: center;">Further information can be found at <a href="https://madeh.github.io/">https://madeh.github.io</a></p>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+         
+
+
+
+
+    <div class="form-group" id="input fields">
+      <div class="row">
+
+        <div class="col-xs-4">
+          <div class="panel panel-default">
+            <div class="panel-body">
+
+              <h4>Input Fields for PCI Calculation</h4>
+              <div class="panel panel-default">
+                <div class="panel-body" style="max-height: 585px; overflow-y: scroll;">
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="PCI0">Current PCI</label>
+                        <p>The current (initial) value for PCI. This should be a <b>real number between</b> 0 and 100.</p>
+                        <input class="form-control" id="PCI0" type="number" min="0" max="100" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="AADT">AADT</label>
+                        <p></p>
+                        <input class="form-control" id="AADT" type="number" min="0" max="100" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="AGE">Age</label>
+                        <p>Age of road (number of years since construction). This should be an <b>integer number</b>.</p>
+                        <input class="form-control" type="number" id="AGE" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="FREEZE_INDEX_YR">Annual Freeze Index</label>
+                        <p>Calculated freeze index as a real number in Celsius days. The index refers to the magnitude and duration of annual freezing periods This should be a <b>real number</b>.</p>
+                        <input class="form-control" type="number" id="FREEZE_INDEX_YR" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="FREEZE_THAW_YR">Freeze-Thaw Cycles per Year</label>
+                        <p>Number of freeze-thaw cycles per year. This should be an integer number between 0 and 365.
+                           A freeze-thaw cycle is said to have occurred if the temperature crossed the freezing point in a calendar day.</p>
+                        <input class="form-control" id="FREEZE_THAW_YR" type="number" min="0" max="365" increment="1" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <div id="GBE-dynamic-block">
+                          <label for="GBE">Granular Base Equivalence</label>
+                          <p>Granular Base Equivalence based on type and of layer and thickness.</p>
+                          <p>Type of layer based on LTPP classification (please select one) and thickness of layer in inches (<b>real number</b>).</p>
+                          <div class="row">
+                            <div class="col-xs-6">
+                              <select id="GBE_TYPE" class="form-control GBE_TYPE" onchange="gbe_change();">
+                                <option>Granular Base</option>
+                                <option>Granular (Unbound) Subbase</option>
+                                <option>Treated (Bound) Base</option>
+                                <option>Treated (Bound) Subbase</option>
+                                <option>Subgrade (Untreated)</option>
+                                <option>Portland Cement Concrete</option>
+                                <option>Engineering Fabric</option>
+                                <option>Asphalt Concrete</option>
+                              </select>
+                            </div>
+                            <div class="col-xs-6">
+                              <input class="form-control GBE_THICK" type="number" id="GBE_THICK" placeholder="0" onchange="gbe_change();"></input>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <a id="add_gbe" class="btn btn-primary" onclick="gbe_click();">Add layer</a>
+                        <hr>
+                        <div id="gbe_result">
+                          <label>Calculated Total GBE</label>
+                          <div class="panel panel-default">
+                            <div class="panel-body" id="gbe_result-text">0</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="PAVEMENT_TYPE">Type of Pavement</label>
+                        <p>Type of pavement based on LTPP classification (please select one).</p>
+                        <select id="PAVEMENT_TYPE" class="form-control">
+                          <option>JRCP - Placed Directly on Untreated Subgrade</option>
+                          <option>CRCP - Placed Directly on Untreated Subgrade</option>
+                          <option>JPCP - Placed Directly on Treated Subgrade</option>
+                          <option>JRCP - Placed Directly on Treated Subgrade</option>
+                          <option>CRCP - Placed Directly on Treated Subgrade</option>
+                          <option>AC with Granular Base</option>
+                          <option>AC with Bituminous Treated Base</option>
+                          <option>AC Overlay on AC Pavement</option>
+                          <option>JPCP Overlay on AC Pavement</option>
+                          <option>JRCP Overlay on AC Pavement</option>
+                          <option>CRCP Overlay on AC Pavement</option>
+                          <option>AC with Non-Bituminous Treated Base</option>
+                          <option>Other</option>
+                          <option>JPCP - Placed Directly on Untreated Subgrade</option>
+                          <option>JPCP Overlay on CRCP Pavement</option>
+                          <option>JRCP Overlay on CRCP Pavement</option>
+                          <option>CRCP Overlay on CRCP Pavement</option>
+                          <option>CRCP Overlay on JPCP Pavement</option>
+                          <option>CRCP Overlay on JRCP Pavement</option>
+                          <option>Prestressed Concrete Pavement</option>
+                          <option>JPCP with Asphalt Concrete Wearing Surface</option>
+                          <option>JRCP with Asphalt Concrete Wearing Surface</option>
+                          <option>CRCP with Asphalt Concrete Wearing Surface</option>
+                          <option>JPCP - Over Unbound Base</option>
+                          <option>JRCP - Over Unbound Base</option>
+                          <option>CRCP - Over Unbound Base</option>
+                          <option>JPCP Over Bituminous Treated Base</option>
+                          <option>JRCP Over Bituminous Treated Base</option>
+                          <option>CRCP Over Bituminous Treated Base</option>
+                          <option>JPCP Over Non-Bituminous Treated Base</option>
+                          <option>JRCP Over Non-Bituminous Treated Base</option>
+                          <option>CRCP Over Non-Bituminous Treated Base</option>
+                          <option>AC Overlay on JPCP Pavement</option>
+                          <option>AC Overlay on JRCP Pavement</option>
+                          <option>AC Overlay on CRCP Pavement</option>
+                          <option>JPCP Overlay on JPCP Pavement</option>
+                          <option>JRCP Overlay on JPCP Pavement</option>
+                          <option>JPCP Overlay on JRCP Pavement</option>
+                          <option>JRCP Overlay on JRCP Pavement</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="MAX_ANN_TEMP_AVG">Average Maximum Annual Temperature</label>
+                        <p>Average maximum temperature in Celsius degrees. This should be a <b>real number</b>.</p>
+                        <input class="form-control" type="number" id="MAX_ANN_TEMP_AVG" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="REMED_YEARS">Years Since Last Maintenance & Rehabilitation</label>
+                        <p>Number of years since last remedial action occurred. This should be a <b>real number</b>.</p>
+                        <input class="form-control" id="REMED_YEARS" type="number" min="0" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="user-input-block">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <label for="TOTAL_ANN_PRECIP">Annual Precipitation</label>
+                        <p>Total annual precipitation in millimeters. This should be a <b>real number</b>.</p>
+                        <input class="form-control" type="number" id="TOTAL_ANN_PRECIP" placeholder="0"></input>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- sounds good doesn't work
+              <label>Predicted PCI Value in <span id="PCI-years">2</span> Years</label>
+              <div class="slidecontainer">
+                <input type="range" min="2" max="6" value="2" class="slider" id="PCI-predict-year" onchange="slider_change();">
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-8" style="height:100%">
+          <div class="panel panel-default" style="height:679px; overflow-y:auto;">
+              <div id="search-panel" class="row">
+                <div class="col-xs-12">
+                  <div class="col-xs-10">
+                    <input id="address" class="form-control" value="King's College Road">
+                  </div>
+                  <div class="col-xs-2">
+                  <input id="submit" class="btn" value="Search & Display PCI">
+                </div>
+                </div>
+              </div>
+              <div id="map"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHyirGsFQWl6KEBhQJ_6lDfGN7roltolY&callback=initMap">
+    </script>
+  </body>
+</html>
+
+
+	
